@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Temperature Hot</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url(images/bg-image.jpg) no-repeat;
+            background-size: cover;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <form class="col-md-6 m-auto py-5">
+            <div class="input-group mb-3">
+                <input type="text" id="city_value" class="form-control" placeholder="Enter a location for Weather ...">
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-danger" id="search_temp">Search</button>
+                </div>
+            </div>
+        </form>
+        <div class="weather-status text-white text-center">
+            <img id="icon" src="https://openweathermap.org/img/wn/02d@2x.png" alt="">
+            <h1 id="city_name">Dhaka</h1>
+            <h3><span id="current_temp">38.06</span>&deg;C</h3>
+            <h1 class="lead" id="description">Clouds</h1>
+        </div>
+    </div>
+    <script>
+        document.getElementById("search_temp").addEventListener("click", function () {
+            const cityValue = document.getElementById("city_value").value;
+            if (cityValue == "") {
+                alert("Enter City Name");
+            }
+            else {
+                getWeatherData(cityValue);
+            }
+
+
+        })
+        const getWeatherData = city => {
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=a97ebc68918f1d569522d2604dac67e2`)
+                .then(response => response.json())
+                .then(data => {
+                    const cityName = document.getElementById("city_name");
+                    const currentTemp = document.getElementById("current_temp");
+                    const currentWeather = document.getElementById("description");
+                    cityName.innerText = data['name'];
+                    const temp = (data['main']['temp'] - 273.15);
+                    currentTemp.innerText = temp.toFixed(1);
+                    currentWeather.innerText = data['weather'][0]['description'];
+
+                    const iconCode = data['weather'][0]['icon'];
+                    const iconUrl = "https://openweathermap.org/img/w/" + iconCode + ".png";
+                    document.getElementById("icon").src = iconUrl;
+                })
+                .catch(error => alert('Wrong City Name!'))
+        }
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>
